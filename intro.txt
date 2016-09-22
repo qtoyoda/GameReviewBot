@@ -1,0 +1,3 @@
+Hi I'm a review bot.
+I'll be using real feedback from tweets to show the public's opinion on games.
+Stay tuned for me to be up and running!
