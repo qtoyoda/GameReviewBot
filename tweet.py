@@ -1,9 +1,8 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*- 
 
 import tweepy, time, sys
-from TwitterSearch import *
-
+from TwitterSearch import * 
 argfile = str(sys.argv[1])
 
 CONSUMER_KEY = 'VX4rE3pnhuXxgHR0xJHmX8Dyn'
@@ -30,32 +29,42 @@ for game in f:
         pos=0
         neg=0
         for tweet in ts.search_tweets_iterable(tso):
-            lowtweet = tweet['text'].lower
-            if 'good' or 'great' or 'amazing' or 'fantastic' or 'excellent' or 'best' in lowtween:
-                pos += 1
-            if 'bad' or 'awful' or 'terrible' or 'worst' in lowtween:
-                neg += 1
+            lowtweet = tweet['text'].lower()
+
+            goodwords = ["good", "love", "loved", "like", "liked", "enjoyed", "amazing", "excellent"]
+            for word in goodwords:
+                if word in lowtweet:
+                    pos += 1
+                    print("POSTIVE MATCH: Found " + word + " in "  + lowtweet )
+
+            badwords = ["bad", "hated", "disliked", "hate", "terrible", "despised"]
+            for word in badwords:
+                if word in lowtweet:
+                    neg += 1
+                    print("NEGATIVE MATCH: Found " + word + " in " + lowtweet)
 
         if (pos + neg) == 0:
             mytweet = 'Nobody has tweeted an opinion about ' + game
         else:
-            score = (pos - neg) / (pos + neg) 
+            score = (pos - neg) / float(pos + neg) 
+            print("SCORE: " + str(score))
 
             if score == 0:
                 rating = 'neither loved or hated'
-            elif score < 0 and score >= -1/3:
+            elif score < 0 and score >= -1/3.0:
                 rating = 'did not like'
-            elif score < -1/3:
+            elif score < -1/3.0:
                 rating = 'hated'
-            elif score <= 1/3:
+            elif score <= 1/3.0:
                 rating = 'liked'
             else:
                 rating = 'loved'
 
-            mytweet= 'Gamers ' + rating + ' ' + game + str(pos) + ' players enjoyed the game, while ' + str(neg) + ' did not'
+            mytweet= 'Gamers ' + rating + ' ' + game + "" + str(pos) + ' players enjoyed the game, while ' + str(neg) + ' did not.'
 
+        print(mytweet)
         api.update_status(mytweet)
-        sleep(86400)
+        time.sleep(43200)
 
     except TwitterSearchException as e:
         print(e)
